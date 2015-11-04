@@ -1,2 +1,6 @@
-/home/parallels/git/simple_ssl_auth/client.cpp
-/home/parallels/git/simple_ssl_auth/server.cpp
+/home/parallels/git/simple_ssl_auth/client_demo.cpp
+
+/home/parallels/git/simple_ssl_auth/server_demo.cpp
+
+/home/parallels/git/simple_ssl_auth/hyc_ssl_contex.cpp
+/home/parallels/git/simple_ssl_auth/hyc_ssl_contex.h

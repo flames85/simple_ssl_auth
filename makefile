@@ -4,18 +4,18 @@ CXXFLAGS = -g -Wall -fPIC
 
 CXX := g++
 
-all: client server
+all: client_demo server_demo
 
 # build
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< 
 
 # link
-client : client.o
+client_demo : client_demo.o hyc_ssl_contex.o
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^ $(LIBS)
 
-server: server.o 
+server_demo: server_demo.o hyc_ssl_contex.o
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $^ $(LIBS)
 
 clean:
-	rm -f server client *.o 
+	rm -f server_demo client_demo *.o 
