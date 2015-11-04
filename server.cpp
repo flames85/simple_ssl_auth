@@ -66,7 +66,6 @@ int main(int argc, char* argv[])
     // 绑定socket
     sockaddr_in service;
     service.sin_family = AF_INET;
-    //service.sin_addr.s_addr = inet_addr("127.0.0.1");
     service.sin_addr.s_addr = INADDR_ANY;
     service.sin_port = htons( 8899 );
 

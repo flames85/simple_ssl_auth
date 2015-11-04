@@ -19,28 +19,19 @@ int main(int argc, char* argv[])
 {
     SOCKET client;
     char buffer[256] = {0};
-    int  seed_int[100]; /*存放随机序列*/
 
     SSL *ssl = NULL;
     SSL_CTX *ssl_ctx = NULL;
-//    SSL_METHOD *ssl_method = NULL;
     X509 *server_cert = NULL;
 
     SSL_library_init();        //init libraries
     OpenSSL_add_all_algorithms(); //支持所有算法
     SSL_load_error_strings();  //提供将错误号解析为字符串的功能
 
-
     //设置客户端使用的SSL版本
     const SSL_METHOD * ssl_method = SSLv3_client_method();
     //创建SSL上下文环境 每个进程只需维护一个SSL_CTX结构体
     ssl_ctx = SSL_CTX_new(ssl_method);
-    /*构建随机数生成机制,WIN32平台必需*/
-    srand( (unsigned)time( NULL ) );
-    for( int i = 0;    i < 100;i++ )
-        seed_int[i] = rand();
-    RAND_seed(seed_int, sizeof(seed_int));
-
 
     /* Load the RSA CA certificate into the SSL_CTX structure */
     /* This will allow this client to verify the server's   */
