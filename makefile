@@ -1,4 +1,4 @@
-LIBS=-lboost_system -lboost_filesystem -lssl -lcrypto -L./third -L./ -lpthread -ldl -lrt 
+LIBS=-lssl -lcrypto -L./third -L./ -lpthread -ldl -lrt 
 
 CXXFLAGS = -g -Wall -fPIC
 
