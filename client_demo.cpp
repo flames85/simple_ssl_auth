@@ -43,12 +43,12 @@ int main(int argc, char* argv[])
         while(1)
         {
             // write
-            if(contex.Write(sslSocket, "I AM CLIENT", sizeof("I AM CLIENT")) <= 0)
+            if(sslSocket->Write("I AM CLIENT", sizeof("I AM CLIENT")) <= 0)
             {
                 break;
             }
             // read
-            if(contex.Read(sslSocket, buffer, 1023) <= 0)
+            if(sslSocket->Read(buffer, 1023) <= 0)
             {
                 break;
             }

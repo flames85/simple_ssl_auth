@@ -41,6 +41,15 @@ struct HycSSLSocket {
         //断开TCP链接
         close(m_socket);
     }
+
+    int Read(char* data, size_t maxLen) {
+        return SSL_read(m_ssl, data, maxLen);
+    }
+
+    int Write(const char* data, size_t maxLen) {
+        return SSL_write(m_ssl, data, maxLen);
+    }
+
 //private:
 //    friend class HycSSLContex;
     SSL     *m_ssl;
@@ -58,10 +67,6 @@ public:
                   const std::string &local_private_file_path);
 
     HycSSLSocket* CreateSSLSocket(SOCKET socket);
-
-    int Read(HycSSLSocket *sslSocket, char* data, size_t maxLen);
-
-    int Write(HycSSLSocket *sslSocket, const char* data, size_t maxLen);
 
 private:
     SSL_CTX        *m_ssl_ctx;

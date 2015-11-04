@@ -54,13 +54,13 @@ int main(int argc, char* argv[])
         while(1)
         {
             // read
-            if(contex.Read(sslSocket, buffer, 1023) <= 0)
+            if(sslSocket->Read(buffer, 1023) <= 0)
             {
                 break;
             }
             std::cout << "receive:" << buffer << std::endl;
             // write
-            if(contex.Write(sslSocket, "I AM SERVER", sizeof("I AM SERVER")) <= 0)
+            if(sslSocket->Write("I AM SERVER", sizeof("I AM SERVER")) <= 0)
             {
                 break;
             }

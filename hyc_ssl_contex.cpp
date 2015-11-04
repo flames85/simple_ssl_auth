@@ -78,12 +78,3 @@ HycSSLSocket* HycSSLContex::CreateSSLSocket(SOCKET socket)
 
     return sslSocket;
 }
-
-int HycSSLContex::Read(HycSSLSocket *sslSocket, char* data, size_t maxLen)
-{
-    return SSL_read(sslSocket->m_ssl, data, maxLen);
-}
-
-int HycSSLContex::Write(HycSSLSocket *sslSocket, const char* data, size_t maxLen) {
-    return SSL_write(sslSocket->m_ssl, data, maxLen);
-}
