@@ -1,4 +1,4 @@
-LIBS=-lssl -lcrypto -L./third -L./ -lpthread -ldl -lrt 
+LIBS=-lssl -lcrypto -L./thirdparty4linux -L./ -lpthread -ldl -lrt 
 
 CXXFLAGS = -g -Wall -fPIC
 

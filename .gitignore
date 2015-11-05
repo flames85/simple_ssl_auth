@@ -1,2 +1,12 @@
 server_demo
 client_demo
+*.bak
+ipch
+Debug
+*.pem
+*.key
+*.sdf
+*.sln
+*.vcproj.user
+*.opensdf
+*.suo
