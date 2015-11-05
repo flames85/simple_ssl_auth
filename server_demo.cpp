@@ -48,6 +48,11 @@ int main(int argc, char* argv[])
 
         //! 生成ssl socket
         HycSSLSocket *sslSocket = contex.CreateSSLSocket(newClientFd);
+
+        if(!sslSocket) {
+            return -2;
+        }
+
         char buffer[1024] = {0};
 
         //! 开始ssl通信
@@ -67,6 +72,12 @@ int main(int argc, char* argv[])
 
             sleep(1);
             memset(buffer, 0x0, 1024);
+        }
+
+        // 析构
+        if(sslSocket) {
+            delete sslSocket;
+            sslSocket = NULL;
         }
 
         return 0;

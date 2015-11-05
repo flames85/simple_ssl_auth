@@ -70,11 +70,33 @@ int HycSSLContex::SetContex(const std::string &ca_verify_file_path,
 
 HycSSLSocket* HycSSLContex::CreateSSLSocket(SOCKET socket)
 {
-    HycSSLSocket *sslSocket = new HycSSLSocket(socket, m_ssl_ctx, m_isServer);
+    HycSSLSocket *sslSocket = new HycSSLSocket(m_ssl_ctx);
 
-    //获取和释放客户端证书
-    X509 *peer_cert = SSL_get_peer_certificate(sslSocket->m_ssl);
-    X509_free(peer_cert);
+    if(!sslSocket) return NULL;
 
-    return sslSocket;
+    do {
+        if(m_isServer)
+        {
+            if(sslSocket->Accept(socket) < 0) break;
+        }
+        else
+        {
+            if(sslSocket->Connect(socket) < 0) break;
+        }
+
+        //获取和释放客户端证书
+        X509 *peer_cert = SSL_get_peer_certificate(sslSocket->m_ssl);
+        // 获取失败
+        if(!peer_cert) break;
+
+        X509_free(peer_cert);
+
+        return sslSocket;
+
+    }while(0);
+
+    delete sslSocket;
+    sslSocket = NULL;
+
+    return NULL;
 }
