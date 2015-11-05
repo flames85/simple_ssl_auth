@@ -49,7 +49,6 @@ int main(int argc, char* argv[])
         if(clientFd < 0)
         {
             CloseSocket(clientFd);
-            WSACleanup();
             return -3;
         }
         sockaddr_in clientService;
@@ -59,7 +58,6 @@ int main(int argc, char* argv[])
         if(connect(clientFd, (struct sockaddr *) &clientService, sizeof(clientService)) < 0)
         {
             CloseSocket(clientFd);
-            WSACleanup();
             return -4;
         }
 
@@ -67,7 +65,6 @@ int main(int argc, char* argv[])
         HycSSLSocket *sslSocket = contex.CreateSSLSocket(clientFd);
         if(!sslSocket) {
             CloseSocket(clientFd);
-            WSACleanup();
             return -5;
         }
 
@@ -98,7 +95,6 @@ int main(int argc, char* argv[])
             sslSocket = NULL;
         }
 
-        WSACleanup();
         return 0;
     }
     catch (std::exception& e)

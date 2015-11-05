@@ -1,4 +1,5 @@
-LIBS=-lssl -lcrypto -L./thirdparty4linux -L./ -lpthread -ldl -lrt 
+LIBS=-lssl -lcrypto -L./thirdparty4linux/lib -L./ -lpthread -ldl -lrt 
+INCLUDES=-I./thirdparty4linux/include
 
 CXXFLAGS = -g -Wall -fPIC
 
@@ -7,8 +8,8 @@ CXX := g++
 all: client_demo server_demo
 
 # build
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< 
+%.o: src/%.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< 
 
 # link
 client_demo : client_demo.o hyc_ssl_contex.o

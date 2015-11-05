@@ -56,17 +56,16 @@ int main(int argc, char* argv[])
         if(bind( serverFd, (struct sockaddr *) &service, sizeof(service) ) < 0)
         {
             CloseSocket(serverFd);
-            WSACleanup();
             return -3;
         }
 
-        //int opt = 1;
-        //setsockopt(serverFd, SOL_SOCKET, SO_REUSEADDR, (const void *)&opt, sizeof(opt));
+        // 端口复用,为了不至于timewait的端口无法再次监听
+        int opt = 1;
+        setsockopt(serverFd, SOL_SOCKET, SO_REUSEADDR, (const void *)&opt, sizeof(opt));
 
         if(listen(serverFd, 10 ) < 0)
         {
             CloseSocket(serverFd);
-            WSACleanup();
             return -4;
         }
         SOCKET newClientFd;
@@ -82,7 +81,6 @@ int main(int argc, char* argv[])
 
         if(!sslSocket) {
             CloseSocket(serverFd);
-            WSACleanup();
             return -5;
         }
 
@@ -113,7 +111,6 @@ int main(int argc, char* argv[])
             sslSocket = NULL;
         }
 
-        WSACleanup();
         return 0;
     }
     catch (std::exception& e)

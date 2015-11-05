@@ -157,7 +157,7 @@ HycSSLSocket* HycSSLContex::CreateSSLSocket(SOCKET socket)
         //获取和释放客户端证书
         X509 *peer_cert = SSL_get_peer_certificate(sslSocket->m_ssl);
         // 获取失败
-        std::cout << "peer-cert: " << peer_cert << endl;
+        std::cout << "peer-cert: " << peer_cert << std::endl;
         X509_free(peer_cert);
 
         return sslSocket;
