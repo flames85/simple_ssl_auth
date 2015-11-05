@@ -20,92 +20,34 @@ typedef int SOCKET;
 class HycSSLContex;
 
 struct HycSSLSocket {
-
-    int Read(char* data, size_t maxLen) {
-        return SSL_read(m_ssl, data, maxLen);
-    }
-
-    int Write(const char* data, size_t maxLen) {
-        return SSL_write(m_ssl, data, maxLen);
-    }
-
-    explicit HycSSLSocket(SSL_CTX *ssl_ctx)
-        :m_ssl(NULL),
-         m_socket(-1)
-    {
-        //创建当前连接的SSL结构体
-        m_ssl = SSL_new(ssl_ctx);
-    }
-
-    ~HycSSLSocket() {
-        if(m_ssl)
-        {
-            //断开SSL链接
-            SSL_shutdown(m_ssl);
-            //释放当前SSL链接结构体
-            SSL_free(m_ssl);
-        }
-        //断开TCP链接
-        if(m_socket > 0)
-            close(m_socket);
-    }
-
+    // ssl读, 失败返回非正数
+    int Read(char* data, size_t maxLen);
+    // ssl写, 失败返回非正数
+    int Write(const char* data, size_t maxLen);
+    // 允许外部析构
+    ~HycSSLSocket();
 private:
-    int Accept(SOCKET socket) {
-        // 保存socket
-        if(socket < 0) return socket;
-        m_socket = socket;
-
-        //将SSL绑定到套接字上
-        int ret = SSL_set_fd(m_ssl, m_socket);
-        if(ret < 0) return ret;
-
-        //建立SSL链接
-        ret = SSL_accept(m_ssl);
-        if(ret < 0) return ret;
-
-        //打印所有加密算法的信息(可选)
-        std::cout<< "SSL connection using" << SSL_get_cipher(m_ssl) << std::endl;
-
-        return ret;
-    }
-
-    int Connect(SOCKET socket) {
-        // 保存socket
-        if(socket < 0) return socket;
-        m_socket = socket;
-
-        //将SSL绑定到套接字上
-        int ret = SSL_set_fd(m_ssl, m_socket);
-        if(ret < 0) return ret;
-
-        //建立SSL链接
-        ret = SSL_connect(m_ssl);
-        if(ret < 0) return ret;
-
-        //打印所有加密算法的信息(可选)
-        std::cout<< "SSL connection using" << SSL_get_cipher(m_ssl) << std::endl;
-
-        return ret;
-    }
+    // 不允许外部调用
+    explicit HycSSLSocket(SSL_CTX *ssl_ctx);
+    int Accept(SOCKET socket) ;
+    int Connect(SOCKET socket) ;
 
 private:
     SSL     *m_ssl;
     SOCKET  m_socket;
-
     friend class HycSSLContex;
 };
 
-
 class HycSSLContex {
 public:
+    // 构建环境对象必须告知是否为服务
     explicit HycSSLContex(bool isServer);
-    ~HycSSLContex();
-
+    virtual ~HycSSLContex();
+    // 创建环境, 失败返回负数
     int SetContex(const std::string &ca_verify_file_path,
                   const std::string &local_certificate_file_path,
                   const std::string &local_private_file_path);
-
+    // 通过socket句柄返回ssl-socket对象
     HycSSLSocket* CreateSSLSocket(SOCKET socket);
 
 private:
