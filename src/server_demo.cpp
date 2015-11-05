@@ -59,10 +59,11 @@ int main(int argc, char* argv[])
             return -3;
         }
 
+#ifndef WIN32
         // 端口复用,为了不至于timewait的端口无法再次监听
         int opt = 1;
         setsockopt(serverFd, SOL_SOCKET, SO_REUSEADDR, (const void *)&opt, sizeof(opt));
-
+#endif
         if(listen(serverFd, 10 ) < 0)
         {
             CloseSocket(serverFd);
