@@ -70,8 +70,8 @@ int main(int argc, char* argv[])
             return -5;
         }
 
-        std::cout << "peer certificate subject: " << sslSocket->m_subjectName << std::endl;
-        std::cout << "peer certificate issuer : " << sslSocket->m_issuerName << std::endl;
+        std::cout << "peer certificate subject: " << sslSocket->m_subjectName.c_str() << std::endl;
+        std::cout << "peer certificate issuer : " << sslSocket->m_issuerName.c_str() << std::endl;
 
         //! 开始ssl通信
         char buffer[1024] = {0};

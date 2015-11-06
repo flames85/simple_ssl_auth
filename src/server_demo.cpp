@@ -74,15 +74,18 @@ int main(int argc, char* argv[])
         SOCKET newClientFd;
         do
         {
+#ifdef WIN32
+            int addrLen = sizeof(newClientAddr);
+#else
             socklen_t addrLen = sizeof(newClientAddr);
+#endif
             newClientFd = accept(serverFd, (struct sockaddr*)&newClientAddr, &addrLen);
             SLEEP(2);
         }while(newClientFd < 0);
 
-        char sPort[16] = {0};
-        sprintf(sPort, ":%d", ntohs(newClientAddr.sin_port));
-        std::string strAddr = inet_ntoa( newClientAddr.sin_addr ) + std::string(sPort);
-        std::cout << "accept:" << strAddr << std::endl;
+        std::string peerIp = inet_ntoa( newClientAddr.sin_addr );
+        unsigned short peerPort = ntohs(newClientAddr.sin_port);
+        std::cout << "accept:" << peerIp.c_str() << ":" << peerPort <<  std::endl;
 
         /***************************************************************************/
 
@@ -94,8 +97,8 @@ int main(int argc, char* argv[])
             return -5;
         }
 
-        std::cout << "peer certificate subject: " << sslSocket->m_subjectName << std::endl;
-        std::cout << "peer certificate issuer : " << sslSocket->m_issuerName << std::endl;
+        std::cout << "peer certificate subject: " << sslSocket->m_subjectName.c_str() << std::endl;
+        std::cout << "peer certificate issuer : " << sslSocket->m_issuerName.c_str() << std::endl;
 
         //! 开始ssl通信
         char buffer[1024] = {0};
