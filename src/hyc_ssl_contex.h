@@ -29,6 +29,10 @@ struct HycSSLSocket {
     int Write(const char* data, size_t maxLen);
     // 允许外部析构
     ~HycSSLSocket();
+
+    std::string     m_subjectName;
+    std::string     m_issuerName;
+
 private:
     // 不允许外部调用
     explicit HycSSLSocket(SSL_CTX *ssl_ctx);

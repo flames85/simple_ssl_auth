@@ -104,6 +104,7 @@ int HycSSLContex::SetContex(const std::string &ca_verify_file_path,
                                             ca_verify_file_path.c_str(),
                                             NULL)) < 0)
     {
+        std::cerr << "load CA verify file error." << std::endl;
         return ret;
     }
 
@@ -116,6 +117,7 @@ int HycSSLContex::SetContex(const std::string &ca_verify_file_path,
                                             local_certificate_file_path.c_str(),
                                             SSL_FILETYPE_PEM)) < 0)
     {
+        std::cerr << "use certificate file error." << std::endl;
         return ret;
     }
 
@@ -124,6 +126,7 @@ int HycSSLContex::SetContex(const std::string &ca_verify_file_path,
                                            local_private_file_path.c_str(),
                                            SSL_FILETYPE_PEM)) < 0)
     {
+        std::cerr << "use privatekey file error." << std::endl;
         return ret;
     }
 
@@ -144,11 +147,17 @@ HycSSLSocket* HycSSLContex::CreateSSLSocket(SOCKET socket)
     do {
         if(m_isServer)
         {
-            if(sslSocket->Accept(socket) < 0) break;
+            if(sslSocket->Accept(socket) < 0) {
+                std::cerr << "ssl accept fail." << std::endl;
+                break;
+            }
         }
         else
         {
-            if(sslSocket->Connect(socket) < 0) break;
+            if(sslSocket->Connect(socket) < 0) {
+                std::cerr << "ssl connect fail." << std::endl;
+                break;
+            }
         }
 
         //打印所有加密算法的信息(可选)
@@ -156,34 +165,38 @@ HycSSLSocket* HycSSLContex::CreateSSLSocket(SOCKET socket)
 
         //获取和释放客户端证书
         X509 *peer_cert = SSL_get_peer_certificate(sslSocket->m_ssl);
-        // 获取失败
-        std::cout << "peer-cert: " << peer_cert << std::endl;
 
-        if (peer_cert != NULL) {
-            std::cout << "peer certificate:" << std::endl;
+        // 证书的subject
+        if(!peer_cert)
+        {
+            std::cerr << "peer certificate nil." << std::endl;
+        }
 
-            char* strInfo = X509_NAME_oneline (X509_get_subject_name (peer_cert), 0, 0);
-            if( strInfo == NULL ) {
-               std::cout << "X509_NAME_oneline error." << std::endl;
-            } else {
-               std::cout << "subject: " << strInfo << std::endl;
-               OPENSSL_free(strInfo);
-            }
-
-            strInfo = X509_NAME_oneline (X509_get_issuer_name  (peer_cert), 0, 0);
-            if( strInfo == NULL ) {
-               std::cout << "X509_NAME_oneline error." << std::endl;
-            } else {
-               std::cout << "issuer: " << strInfo << std::endl;
-               OPENSSL_free(strInfo);
-            }
-
-            X509_free(peer_cert);
+        char* strInfo = X509_NAME_oneline(X509_get_subject_name(peer_cert), 0, 0);
+        if(!strInfo)
+        {
+           std::cerr << "X509_NAME_oneline subject name error." << std::endl;
+           break;
         }
         else
         {
-            std::cout<<"peer does not have certificate. "<<std::endl;
+           sslSocket->m_subjectName = strInfo;
+           OPENSSL_free(strInfo);
         }
+        // 证书的issuer
+        strInfo = X509_NAME_oneline(X509_get_issuer_name(peer_cert), 0, 0);
+        if(!strInfo)
+        {
+           std::cerr << "X509_NAME_oneline issuer name error." << std::endl;
+           break;
+        }
+        else
+        {
+           sslSocket->m_issuerName = strInfo;
+           OPENSSL_free(strInfo);
+        }
+
+        X509_free(peer_cert);
 
         return sslSocket;
 

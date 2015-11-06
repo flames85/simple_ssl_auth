@@ -94,33 +94,27 @@ int main(int argc, char* argv[])
             return -5;
         }
 
-        char buffer[1024] = {0};
+        std::cout << "peer certificate subject: " << sslSocket->m_subjectName << std::endl;
+        std::cout << "peer certificate issuer : " << sslSocket->m_issuerName << std::endl;
 
         //! 开始ssl通信
+        char buffer[1024] = {0};
         while(1)
         {
             // read
-            if(sslSocket->Read(buffer, 1023) <= 0)
-            {
-                break;
-            }
+            if(sslSocket->Read(buffer, 1023) <= 0) break;
             std::cout << "receive:" << buffer << std::endl;
             // write
-            if(sslSocket->Write("I AM SERVER", sizeof("I AM SERVER")) <= 0)
-            {
-                break;
-            }
+            if(sslSocket->Write("I AM SERVER", sizeof("I AM SERVER")) <= 0) break;
 
             SLEEP(1);
             memset(buffer, 0x0, 1024);
         }
-
         // 析构
         if(sslSocket) {
             delete sslSocket;
             sslSocket = NULL;
         }
-
         return 0;
     }
     catch (std::exception& e)
