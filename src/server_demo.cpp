@@ -26,7 +26,6 @@ int main(int argc, char* argv[])
         std::string local_certificate_file_path = "certificate/server-cert.pem";
         std::string local_private_file_path = "certificate/server-cert.key";
 
-
         if(contex.SetContex(ca_verify_file_path,
                             local_certificate_file_path,
                             local_private_file_path) < 0 )
@@ -35,6 +34,7 @@ int main(int argc, char* argv[])
             return -1;
         }
 
+        /***************************************************************************/
         // 以下是正常的socket监听流程
 #ifdef WIN32
         // 初始化 Winsock.
@@ -69,13 +69,22 @@ int main(int argc, char* argv[])
             CloseSocket(serverFd);
             return -4;
         }
+
+        struct sockaddr_in newClientAddr ={0};
         SOCKET newClientFd;
         do
         {
-            newClientFd = accept(serverFd, NULL, NULL);
+            socklen_t addrLen = sizeof(newClientAddr);
+            newClientFd = accept(serverFd, (struct sockaddr*)&newClientAddr, &addrLen);
             SLEEP(2);
         }while(newClientFd < 0);
 
+        char sPort[16] = {0};
+        sprintf(sPort, ":%d", ntohs(newClientAddr.sin_port));
+        std::string strAddr = inet_ntoa( newClientAddr.sin_addr ) + std::string(sPort);
+        std::cout << "accept:" << strAddr << std::endl;
+
+        /***************************************************************************/
 
         //! 生成ssl socket
         HycSSLSocket *sslSocket = contex.CreateSSLSocket(newClientFd);

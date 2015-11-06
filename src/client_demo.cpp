@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
             return -1;
         }
 
-
+        /***************************************************************************/
         // 以下是正常的socket连接流程
 #ifdef WIN32
         // 初始化 Winsock.
@@ -60,6 +60,7 @@ int main(int argc, char* argv[])
             CloseSocket(clientFd);
             return -4;
         }
+        /***************************************************************************/
 
         //! 生成ssl socket
         HycSSLSocket *sslSocket = contex.CreateSSLSocket(clientFd);

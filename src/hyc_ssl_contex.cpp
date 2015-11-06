@@ -95,7 +95,6 @@ int HycSSLContex::SetContex(const std::string &ca_verify_file_path,
     SSL_CTX_set_verify(m_ssl_ctx, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT, NULL);
     SSL_CTX_set_cipher_list(m_ssl_ctx, "RC4-MD5");
 
-    // test
     SSL_CTX_set_default_verify_paths(m_ssl_ctx) ;
     SSL_CTX_set_verify_depth(m_ssl_ctx, 4);
 
