@@ -61,7 +61,7 @@ public:
 private:
     SSL_CTX        *m_ssl_ctx;
     bool            m_isServer;
-    int             m_seed_int[100]; /*存放随机序列*/
+
 };
 
 

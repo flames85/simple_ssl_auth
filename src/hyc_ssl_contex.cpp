@@ -101,6 +101,17 @@ int HycSSLContex::SetContex(const std::string &ca_verify_file_path,
     SSL_CTX_set_default_verify_paths(m_ssl_ctx) ;
     SSL_CTX_set_verify_depth(m_ssl_ctx, 4);
 
+#ifdef WIN32
+    // 在win32的环境中client程序运行时出错(SSL_connect返回-1)的一个主要机制,
+    // 便是与UNIX平台下的随机数生成机制不同(握手的时候用的到).
+    // 具体描述可见mod_ssl的FAQ.解决办法就是调用此函数RAND_seed,其中buf应该为一随机的字符串,作为"seed".
+    int seed_int[100]; /*存放随机序列*/
+    srand((unsigned)time(NULL));
+    for(int i = 0; i < 100; i++)
+        seed_int[i] = rand();
+    RAND_seed(seed_int, sizeof(seed_int));
+#endif
+
     int ret = 0;
     //若验证,则放置CA证书
     if( (ret = SSL_CTX_load_verify_locations(m_ssl_ctx,
