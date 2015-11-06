@@ -27,7 +27,8 @@ int main(int argc, char* argv[])
 
         if(contex.SetContex(ca_verify_file_path,
                             local_certificate_file_path,
-                            local_private_file_path) < 0 )
+                            local_private_file_path,
+                            "RC4-MD5") < 0 )
         {
             std::cerr << "set contex fail" << std::endl;
             return -1;

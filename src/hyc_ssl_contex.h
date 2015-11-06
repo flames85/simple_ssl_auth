@@ -53,7 +53,8 @@ public:
     // 创建环境, 失败返回负数
     int SetContex(const std::string &ca_verify_file_path,
                   const std::string &local_certificate_file_path,
-                  const std::string &local_private_file_path);
+                  const std::string &local_private_file_path,
+                  const char *cipher = NULL);
     // 通过socket句柄返回ssl-socket对象
     HycSSLSocket* CreateSSLSocket(SOCKET socket);
 

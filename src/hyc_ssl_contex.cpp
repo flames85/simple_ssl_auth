@@ -90,10 +90,13 @@ HycSSLContex::~HycSSLContex() {
 
 int HycSSLContex::SetContex(const std::string &ca_verify_file_path,
                             const std::string &local_certificate_file_path,
-                            const std::string &local_private_file_path) {
+                            const std::string &local_private_file_path,
+                            const char* cipher) {
     //验证对方
     SSL_CTX_set_verify(m_ssl_ctx, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT, NULL);
-    SSL_CTX_set_cipher_list(m_ssl_ctx, "RC4-MD5");
+    // 设定算法
+    if(cipher) /* RC4-MD5 */
+        SSL_CTX_set_cipher_list(m_ssl_ctx, cipher);
 
     SSL_CTX_set_default_verify_paths(m_ssl_ctx) ;
     SSL_CTX_set_verify_depth(m_ssl_ctx, 4);
@@ -161,7 +164,7 @@ HycSSLSocket* HycSSLContex::CreateSSLSocket(SOCKET socket)
         }
 
         //打印所有加密算法的信息(可选)
-        std::cout<< "SSL connection using" << SSL_get_cipher(sslSocket->m_ssl) << std::endl;
+        std::cout<< "SSL connection using: " << SSL_get_cipher(sslSocket->m_ssl) << std::endl;
 
         //获取和释放客户端证书
         X509 *peer_cert = SSL_get_peer_certificate(sslSocket->m_ssl);
