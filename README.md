@@ -13,16 +13,24 @@ SSL连接简要步骤是:
 
 
 单向验证
+
 server                  client
----------------------------------
+
                 +-----> ca.pem
+                
 ce.pem(s) +-----+    
+
 pr.key(s) +
 
 
 双向验证
+
 server                  client
----------------------------------
+
 ca.pem    <----+   +--> ca.pem
+
 ce.pem(s) +----|--+   + ce.pem(c)
+
 pr.key(s) +    +------+ pr.key(c)
+
+
