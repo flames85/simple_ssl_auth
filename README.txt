@@ -1,8 +1,9 @@
-本工程主要功能是为原始socket"附加"SSL双向认证功能.
+本工程是C++工程, 主要功能是为linux/win原始socket, "附加"SSL双向认证功能.
+依赖库openssl, 已经静态编译进thirdpartyxxx中. 当然也可以自己替换.
 
 由于业务需要, 本工程用的是SSL的一个分支TLS(版本TLS1.0).
 
-# 代码见src目录下demo代码.
+# 使用方法见src目录下xxx_demo.cpp代码. 一看就懂. 
 
 # 理解SSL连接简要步骤是:
 1. 建立TCP连接.
